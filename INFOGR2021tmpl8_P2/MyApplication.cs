@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using INFOGR2019Tmpl8;
 using OpenTK;
 
 namespace Template
@@ -7,17 +8,17 @@ namespace Template
 	{
 		// member variables
 		public Surface screen;                  // background surface for printing etc.
-		Mesh mesh, floor;                       // a mesh to draw using OpenGL
+		static public Mesh mesh, floor;                 // a mesh to draw using OpenGL
 		const float PI = 3.1415926535f;         // PI
 		float a = 0;                            // teapot rotation angle
 		Stopwatch timer;                        // timer for measuring frame duration
 		Shader shader;                          // shader to use for rendering
 		Shader postproc;                        // shader to use for post processing
-		Texture wood;                           // texture to use for rendering
+		Texture wood, ground;                           // texture to use for rendering
 		RenderTarget target;                    // intermediate render target
 		ScreenQuad quad;                        // screen filling quad for post processing
 		bool useRenderTarget = true;
-
+		SceneGraph scene = new SceneGraph();
 		// initialize
 		public void Init()
 		{
@@ -33,9 +34,13 @@ namespace Template
 			postproc = new Shader( "../../shaders/vs_post.glsl", "../../shaders/fs_post.glsl" );
 			// load a texture
 			wood = new Texture( "../../assets/wood.jpg" );
+			ground = new Texture("../../assets/ground.jpg");
 			// create the render target
 			target = new RenderTarget( screen.width, screen.height );
 			quad = new ScreenQuad();
+			// create the hierachy
+			SceneGraph.hierachy.Add(mesh, floor);
+
 		}
 
 		// tick for background surface
@@ -55,9 +60,10 @@ namespace Template
 
 			// prepare matrix for vertex shader
 			float angle90degrees = PI / 2;
-			Matrix4 Tpot = Matrix4.CreateScale( 0.5f ) * Matrix4.CreateFromAxisAngle( new Vector3( 0, 1, 0 ), a );
-			Matrix4 Tfloor = Matrix4.CreateScale( 4.0f ) * Matrix4.CreateFromAxisAngle( new Vector3( 0, 1, 0 ), a );
-			Matrix4 Tcamera = Matrix4.CreateTranslation( new Vector3( 0, -14.5f, 0 ) ) * Matrix4.CreateFromAxisAngle( new Vector3( 1, 0, 0 ), angle90degrees );
+			mesh.view = Matrix4.CreateScale( 0.5f/4 ) * Matrix4.CreateFromAxisAngle( new Vector3( 0,1, 0 ), 0 );	//Camera transformation.
+			floor.view = Matrix4.CreateScale( 4.0f ) * Matrix4.CreateFromAxisAngle( new Vector3( 0, 1, 0 ), a );
+			Matrix4 Tcube = Matrix4.CreateScale(2f) * Matrix4.CreateFromAxisAngle(new Vector3(0, 1, 0), a); 
+			Matrix4 Tcamera = Matrix4.CreateTranslation( new Vector3( 0, -14.5f, 0 ) ) * Matrix4.CreateFromAxisAngle( new Vector3( 1, 0, 0 ), angle90degrees ); // 
 			Matrix4 Tview = Matrix4.CreatePerspectiveFieldOfView( 1.2f, 1.3f, .1f, 1000 );
 
 			// update rotation
@@ -69,9 +75,11 @@ namespace Template
 				// enable render target
 				target.Bind();
 
+				
 				// render scene to render target
-				mesh.Render( shader, Tpot * Tcamera * Tview, wood );
-				floor.Render( shader, Tfloor * Tcamera * Tview, wood );
+				mesh.Render( shader, scene.Render(mesh) * Tcamera * Tview, wood );
+				floor.Render( shader, scene.Render(floor)* Tcamera * Tview, ground );
+				//cube.Render(shader, Tcube * Tcamera * Tview, wood);
 
 				// render quad
 				target.Unbind();
@@ -80,8 +88,8 @@ namespace Template
 			else
 			{
 				// render scene directly to the screen
-				mesh.Render( shader, Tpot * Tcamera * Tview, wood );
-				floor.Render( shader, Tfloor * Tcamera * Tview, wood );
+				mesh.Render( shader, mesh.view * Tcamera * Tview, wood );
+				floor.Render( shader, floor.view* Tcamera * Tview, wood );
 			}
 		}
 	}
