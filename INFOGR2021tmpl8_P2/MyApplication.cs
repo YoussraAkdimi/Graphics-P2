@@ -43,6 +43,7 @@ namespace Template
 		{
 			screen.Clear( 0 );
 			screen.Print( "hello world", 2, 2, 0xffff00 );
+			screen.Bar(50, 50, 60, 60, 0xfffffff);
 		}
 
 		// tick for OpenGL rendering code

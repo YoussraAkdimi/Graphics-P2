@@ -7,12 +7,16 @@ in vec3 vPosition;		// untransformed vertex position
 
 // shader output
 out vec4 normal;		// transformed vertex normal
-out vec2 uv;				
+out vec2 uv;	
+out vec3 fragPos;
+
 uniform mat4 transform;
  
 // vertex shader
 void main()
 {
+	fragPos = vec3(transform * vec4(vPosition, 1.0));
+
 	// transform vertex using supplied matrix
 	gl_Position = transform * vec4(vPosition, 1.0);
 
