@@ -67,7 +67,7 @@ namespace Template
 
 			// prepare matrix for vertex shader
 			float angle90degrees = PI / 2;
-			mesh.view = Matrix4.CreateScale(0.5f / 6) * Matrix4.CreateFromAxisAngle(new Vector3(0, 1, 0), 0) * Matrix4.CreateTranslation(new Vector3((float)(5 * Math.Cos(0)), -2.0f, -(float)(5 * Math.Sin(0)))); ;	//Camera transformation.
+			mesh.view = Matrix4.CreateScale(0.5f / 6) * Matrix4.CreateFromAxisAngle(new Vector3(0, 1, 0), 0) * Matrix4.CreateTranslation(new Vector3((float)(5 * Math.Cos(a)), -2.0f, -(float)(5 * Math.Sin(a)))); ;	//Camera transformation.
 			floor.view = Matrix4.CreateScale( 8.0f ) * Matrix4.CreateFromAxisAngle( new Vector3( 0, 1, 0 ), a );
 			cube.view = Matrix4.CreateScale(2/4f) * Matrix4.CreateFromAxisAngle(new Vector3(0, 1, 0), 0);
 			cloud.view = Matrix4.CreateScale(1.0f) * Matrix4.CreateFromAxisAngle(new Vector3(0, 1, 0), a);
