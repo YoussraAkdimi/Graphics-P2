@@ -16,7 +16,7 @@ namespace Template
 		int vertexBufferId;                     // vertex buffer
 		int triangleBufferId;                   // triangle buffer
 		int quadBufferId;                       // quad buffer
-
+		public Matrix4 view;
 		// constructor
 		public Mesh( string fileName )
 		{
