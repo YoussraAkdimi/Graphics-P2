@@ -10,11 +10,14 @@ uniform sampler2D pixels;	// texture sampler
 // shader output
 out vec4 outputColor;
 
-uniform bool lightOn = true;
-uniform vec3 lightPos = vec3(250, 0, 250);
+uniform bool lightOn = true;                        //true if second lightsource wants to be turned on
+
+uniform vec3 lightPos = vec3(250, 0, 250);          //first lightsource 
 uniform vec3 lightColor = vec3(0.5, 0.5, 0.5);
-uniform vec3 lightPos1 = vec3(-100, 0, 50);
+
+uniform vec3 lightPos1 = vec3(-100, 0, 50);         //second lightsource - more lightsources can be hardcoded the same way!
 uniform vec3 lightColor1 = vec3(0.5, 0.5, 0.5);
+
 uniform vec3 viewPos = vec3(-100, 0, -50);          //the negative value of the cameraposition hardcoded
 uniform vec3 objectColor;
 

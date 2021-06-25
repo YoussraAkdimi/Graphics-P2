@@ -48,7 +48,6 @@ namespace Template
 			// create the hierachy
 			SceneGraph.hierachy.Add(mesh, floor);
 			SceneGraph.hierachy.Add(cube, floor);
-			
 		}
 
 		// tick for background surface
