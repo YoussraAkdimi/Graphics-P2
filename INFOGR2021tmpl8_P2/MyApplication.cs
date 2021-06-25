@@ -2,6 +2,7 @@ using System.Diagnostics;
 using INFOGR2019Tmpl8;
 using OpenTK;
 using System;
+using OpenTK.Graphics.OpenGL;
 
 namespace Template
 {
@@ -47,19 +48,31 @@ namespace Template
 			// create the hierachy
 			SceneGraph.hierachy.Add(mesh, floor);
 			SceneGraph.hierachy.Add(cube, floor);
-
+			
 		}
 
 		// tick for background surface
 		public void Tick()
 		{
 			screen.Clear( 0 );
-			screen.Print( "hello world", 2, 2, 0xffff00 );
+			screen.Print("hello world", 2, 2, 0xffff00);
 		}
 
 		// tick for OpenGL rendering code
 		public void RenderGL()
 		{
+			//when 'l' is pressed on the keyboard a second lightsource will appear
+			int lightning = 0;
+			if (LightOn() == true)
+			{
+				lightning = 1;
+			}
+			if (LightOn() == false)
+			{
+				lightning = 0;
+			}
+			GL.ProgramUniform1(shader.programID, shader.uniform_lighto, lightning);
+
 			// measure frame duration
 			float frameDuration = timer.ElapsedMilliseconds;
 			timer.Reset();
@@ -113,5 +126,16 @@ namespace Template
         {
 			scene.move(direction);
         }
+
+		public static bool LightOn()
+		{
+			var state = OpenTK.Input.Keyboard.GetState();
+			if (state[OpenTK.Input.Key.L])
+			{
+				return true;
+			}
+			else 
+				return false;
+		}
 	}
 }

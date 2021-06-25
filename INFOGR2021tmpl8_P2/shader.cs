@@ -14,6 +14,7 @@ namespace Template
 		public int uniform_mview;
 		public int uniform_lightp;
 		public int uniform_lightc;
+		public int uniform_lighto;
 
 		// constructor
 		public Shader( String vertexShader, String fragmentShader )
@@ -32,8 +33,8 @@ namespace Template
 			uniform_mview = GL.GetUniformLocation( programID, "transform" );
 			uniform_lightp = GL.GetUniformLocation(programID, "lightPos");
 			uniform_lightc = GL.GetUniformLocation(programID, "LightColor");
+			uniform_lighto = GL.GetUniformLocation(programID, "lightOn");
 		}
-
 		// loading shaders
 		void Load( String filename, ShaderType type, int program, out int ID )
 		{
