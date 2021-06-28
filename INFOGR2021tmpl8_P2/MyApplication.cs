@@ -9,26 +9,31 @@ namespace Template
 	{
 		// member variables
 		public Surface screen;                  // background surface for printing etc.
-		static public Mesh mesh, floor, cube, cloud, boom;            // a mesh to draw using OpenGL
+		static public Mesh mesh, floor, cube, cloud, boom, kop, table, kop2;            // a mesh to draw using OpenGL
 		const float PI = 3.1415926535f;         // PI
 		float a = 0;                            // teapot rotation angle
 		Stopwatch timer;                        // timer for measuring frame duration
 		Shader shader;                          // shader to use for rendering
 		Shader postproc;                        // shader to use for post processing
-		Texture wood, ground, purple, wolkig;                           // texture to use for rendering
+		Texture wood, ground, purple, wolkig, gold, silver;                           // texture to use for rendering
 		RenderTarget target;                    // intermediate render target
 		ScreenQuad quad;                        // screen filling quad for post processing
 		bool useRenderTarget = true;
-		SceneGraph scene = new SceneGraph();
+		SceneGraph scene;
+
 		// initialize
 		public void Init()
 		{
+			scene = new SceneGraph(screen);
 			// load teapot
 			mesh = new Mesh( "../../assets/teapot.obj" );
 			floor = new Mesh( "../../assets/floor.obj" );
 			cube = new Mesh("../../assets/cube.obj");
 			cloud = new Mesh("../../assets/cumulus00.obj");
 			boom = new Mesh("../../assets/AL05m");
+			kop = new Mesh("../../assets/cup.obj");
+			table = new Mesh("../../assets/table.obj");
+			kop2 = new Mesh("../../assets/cup.obj");
 			// initialize stopwatch
 			timer = new Stopwatch();
 			timer.Reset();
@@ -41,12 +46,16 @@ namespace Template
 			ground = new Texture("../../assets/ground.jpg");
 			purple = new Texture("../../assets/purple.jpg");
 			wolkig = new Texture("../../assets/cloud.jpg");
+			gold = new Texture("../../assets/gold.jpg");
+			silver = new Texture("../../assets/silver.jpg");
 			// create the render target
 			target = new RenderTarget( screen.width, screen.height );
 			quad = new ScreenQuad();
 			// create the hierachy
-			SceneGraph.hierachy.Add(mesh, floor);
-			SceneGraph.hierachy.Add(cube, floor);
+			SceneGraph.hierachy.Add(mesh, table);
+			SceneGraph.hierachy.Add(kop, table);
+			SceneGraph.hierachy.Add(kop2, table);
+			SceneGraph.hierachy.Add(table, floor);
 
 		}
 
@@ -67,11 +76,14 @@ namespace Template
 
 			// prepare matrix for vertex shader
 			float angle90degrees = PI / 2;
-			mesh.view = Matrix4.CreateScale(0.5f / 6) * Matrix4.CreateFromAxisAngle(new Vector3(0, 1, 0), 0) * Matrix4.CreateTranslation(new Vector3((float)(5 * Math.Cos(a)), -2.0f, -(float)(5 * Math.Sin(a)))); ;	//Camera transformation.
-			floor.view = Matrix4.CreateScale( 8.0f ) * Matrix4.CreateFromAxisAngle( new Vector3( 0, 1, 0 ), a );
+			mesh.view = Matrix4.CreateScale(15.0f) * Matrix4.CreateFromAxisAngle(new Vector3(0, 1, 0), PI/2) * Matrix4.CreateTranslation(new Vector3(200 + (float)(5 * Math.Cos(a)), 350.0f, 200 - (float)(5 * Math.Sin(a))));	//Camera transformation.
+			floor.view = Matrix4.CreateScale( 18.0f ) * Matrix4.CreateFromAxisAngle( new Vector3( 0, 1, 0 ), 0 );
 			cube.view = Matrix4.CreateScale(2/4f) * Matrix4.CreateFromAxisAngle(new Vector3(0, 1, 0), 0);
 			cloud.view = Matrix4.CreateScale(1.0f) * Matrix4.CreateFromAxisAngle(new Vector3(0, 1, 0), a);
 			boom.view = Matrix4.CreateScale(1.0f) * Matrix4.CreateFromAxisAngle(new Vector3(0, 1, 0), 0);
+			kop.view = Matrix4.CreateScale(0.5f) * Matrix4.CreateFromAxisAngle(new Vector3(0, 1, 0), 0) * Matrix4.CreateTranslation(new Vector3(50+ (float)(5 * Math.Cos(a)), 350.0f, 100 - (float)(5 * Math.Sin(a))));
+			kop2.view = Matrix4.CreateScale(0.5f) * Matrix4.CreateFromAxisAngle(new Vector3(0, 1, 0), 0) * Matrix4.CreateTranslation(new Vector3(-70 + (float)(5 * Math.Cos(a)), 350.0f, 100 + (float)(5 * Math.Sin(a))));
+			table.view = Matrix4.CreateScale(1.0f / 108.0f) * Matrix4.CreateFromAxisAngle(new Vector3(0, 1, 0), a) * Matrix4.CreateTranslation(new Vector3(0,-2,0));
 			//	Matrix4 Tcamera = Matrix4.CreateTranslation( new Vector3( 0, -14.5f, 0 ) ) * Matrix4.CreateFromAxisAngle( new Vector3( 1, 0, 0 ), angle90degrees ); // 
 			Matrix4 Tview = Matrix4.CreatePerspectiveFieldOfView( 1.2f, 1.3f, .1f, 1000 );
 
@@ -87,11 +99,14 @@ namespace Template
 
 				// render scene to render target
 
-				mesh.Render( shader, scene.Render(mesh)* Tview, wood );
-				cube.Render(shader, scene.Render(cube) * Tview, purple);
+				mesh.Render( shader, scene.Render(mesh)* Tview, gold);
+			//	cube.Render(shader, scene.Render(cube) * Tview, purple);
 				floor.Render( shader, scene.Render(floor)* Tview, ground );
-				//boom.Render(shader, scene.Render(boom) * Tview)
-			//	cloud.Render(shader, scene.Render(cloud) * Tview, wolkig);
+				table.Render(shader, scene.Render(table) * Tview, wood);
+				kop.Render(shader, scene.Render(kop) * Tview, silver);
+				kop2.Render(shader, scene.Render(kop2) * Tview, silver);
+				//	boom.Render(shader, scene.Render(boom) * Tview, wood);
+				//	cloud.Render(shader, scene.Render(cloud) * Tview, wolkig);
 
 
 				// render quad
@@ -105,13 +120,14 @@ namespace Template
 				mesh.Render(shader, scene.Render(mesh)* Tview, wood);
 				cube.Render(shader, scene.Render(cube)* Tview, purple);
 				floor.Render(shader, scene.Render(floor)* Tview, ground);
+				kop.Render(shader, scene.Render(kop) * Tview, wood);
 
 			}
 		}
 
-		public void MoveCamera(char direction)
+		public void MoveCamera(char direction, bool rotate)
         {
-			scene.move(direction);
+			scene.move(direction, rotate);
         }
 	}
 }
