@@ -98,6 +98,7 @@ namespace Template
 			GL.PopClientAttrib();
 		}
 
+
 		// layout of a single vertex
 		[StructLayout( LayoutKind.Sequential )]
 		public struct ObjVertex
@@ -120,5 +121,7 @@ namespace Template
 		{
 			public int Index0, Index1, Index2, Index3;
 		}
+
+
 	}
 }

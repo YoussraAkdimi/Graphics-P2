@@ -62,10 +62,14 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="assets\table.obj" />
+    <None Include="assets\cup.obj" />
+    <None Include="assets\kop.rar" />
     <None Include="assets\AL05m.obj" />
     <None Include="assets\cube.obj" />
     <None Include="assets\cumulus00.obj" />
     <None Include="assets\floor.obj" />
+    <None Include="assets\Snowscape diorama.glb" />
     <None Include="assets\teapot.obj" />
     <None Include="shaders\fs.glsl" />
     <None Include="shaders\fs_post.glsl" />
@@ -80,8 +84,11 @@
   <ItemGroup>
     <Content Include="assets\cloud.jpg" />
     <Content Include="assets\font.png" />
+    <Content Include="assets\gold.jpg" />
     <Content Include="assets\ground.jpg" />
     <Content Include="assets\purple.jpg" />
+    <Content Include="assets\red.jpg" />
+    <Content Include="assets\silver.jpg" />
     <Content Include="assets\wood.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
