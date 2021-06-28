@@ -29,6 +29,7 @@ namespace Template
 		static int screenID;            // unique integer identifier of the OpenGL texture
 		static MyApplication app;       // instance of the application
 		static bool terminated = false; // application terminates gracefully when this is true
+		bool shift;
 		protected override void OnLoad( EventArgs e )
 		{
 			// called during application initialization
@@ -62,11 +63,11 @@ namespace Template
 			// called once per frame; app logic
 			var keyboard = Keyboard.GetState();
 			if( keyboard[Key.Escape] ) terminated = true;
-
-			if (keyboard[Key.Up]) app.MoveCamera('w');
-			if (keyboard[Key.Down]) app.MoveCamera('s');
-			if (keyboard[Key.Left]) app.MoveCamera('a');
-			if (keyboard[Key.Right]) app.MoveCamera('d');
+			shift = (keyboard[Key.ShiftLeft] || keyboard[Key.ShiftRight]);
+			if (keyboard[Key.Up]) app.MoveCamera('w', shift);
+			if (keyboard[Key.Down]) app.MoveCamera('s', shift);
+			if (keyboard[Key.Left]) app.MoveCamera('a', shift);
+			if (keyboard[Key.Right]) app.MoveCamera('d', shift);
 		}
 		protected override void OnRenderFrame( FrameEventArgs e )
 		{
