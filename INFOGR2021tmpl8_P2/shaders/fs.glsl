@@ -21,6 +21,7 @@ uniform vec3 lightColor1 = vec3(0.5, 0.5, 0.5);
 uniform vec3 viewPos = vec3(-100, 0, -50);          //the negative value of the cameraposition hardcoded
 uniform vec3 objectColor;
 
+//Method that implements phong shader
 vec3 PhongShader(vec3 pos, vec3 color, float ambientS, float specS)
 {
     //diffuse
@@ -43,14 +44,16 @@ vec3 PhongShader(vec3 pos, vec3 color, float ambientS, float specS)
 // fragment shader
 void main()
 {
-    //different lightsources
+    //Implementing phong shader ondifferent lightsources
     vec3 result = PhongShader(lightPos, lightColor, 0.1, 0.0025);
     vec3 result1 = PhongShader(lightPos1, lightColor1, 0.1, 0.00001);
 
+    //Returns color of the two lightsource combined
     if(lightOn == true)
     {
         outputColor = texture( pixels, uv) + vec4(result, 1) + vec4(result1, 1);
     }
+    //Return color of the first lightsource
     if(lightOn == false) 
     {
         outputColor = texture( pixels, uv) + vec4(result, 1);

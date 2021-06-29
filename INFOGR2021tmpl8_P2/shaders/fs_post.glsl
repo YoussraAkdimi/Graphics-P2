@@ -9,6 +9,7 @@ uniform vec2 uResolution;
 // shader output
 out vec3 outputColor;
 
+//calculates Colors with vignette implemented
 vec3 GetVignette(vec3 color)
 {
 	vec2 position = uv - vec2(0.5);
@@ -28,8 +29,14 @@ void main()
 	float p2 = texture(pixels, uv + vec2(0.01, 0)).g;
 	float p3 = texture(pixels, uv + vec2(0.01, 0)).b;
 	vec3 abbColor = vec3(p1, p2, p3);
+
+	//combining vignette and aberration colors
 	vec3 vigColor = GetVignette(abbColor);
+
 	outputColor = vigColor;
+
+	//if post processing wants to be turned off
+	//outputColor = texture(pixels, uv).rgb;
 }
 
 // EOF
